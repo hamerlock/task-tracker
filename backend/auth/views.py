@@ -44,4 +44,4 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, "Vous avez été déconnecté.")
-    return redirect("atuh:login")
+    return redirect("auth:login")
