@@ -34,8 +34,9 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     # Exemple d'import des models
-    # "polls.apps.PollsConfig",
-    "django.contrib.admin",
+    'tasks.apps.TasksConfig',
+    'auth.apps.AuthConfig',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -135,3 +136,8 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configuration des URLs d'authentification
+LOGIN_URL = '/auth/login/'
+LOGIN_REDIRECT_URL = '/tasks/' # Redirige vers la liste des tâches
+LOGOUT_REDIRECT_URL = '/auth/login/'
