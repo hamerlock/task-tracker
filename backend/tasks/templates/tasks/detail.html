@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Détail de la Tâche{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ object.description }}</h2>
+    </div>
+    <div class="card-body">
+        <p><strong>Catégorie:</strong> {{ object.get_category_display }}</p>
+        <p><strong>Date de début:</strong> {{ object.start_date|date:"d/m/Y H:i"|default:"Non définie" }}</p>
+        <p><strong>Date de fin:</strong> {{ object.end_date|date:"d/m/Y H:i"|default:"Non définie" }}</p>
+        <p><strong>Status:</strong> {% if object.is_active %}Actif{% else %}Archivé{% endif %}</p>
+        <p><strong>Créé le:</strong> {{ object.created_at|date:"d/m/Y H:i" }}</p>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'tasks:update' object.pk %}" class="btn btn-warning">Modifier</a>
+        <a href="{% url 'tasks:delete' object.pk %}" class="btn btn-danger">Supprimer</a>
+        <a href="{% url 'tasks:list' %}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}

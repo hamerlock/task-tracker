@@ -22,13 +22,14 @@
 
         {% if user.is_authenticated %}
             <div>
+                <a href="{% url 'tasks:list' %}" class="btn btn-sm btn-outline-light">Mes Tâches</a>
                 <span>Bonjour, {{ user.username }} 👋</span>
-                {% comment %} <a href="{% url 'logout' %}" class="btn btn-sm btn-light ms-2">Se déconnecter</a> {% endcomment %}
+                 <a href="{% url 'auth:logout' %}" class="btn btn-sm btn-light ms-2">Se déconnecter</a> 
             </div>
         {% else %}
             <div>
-                {% comment %} <a href="{% url 'login' %}" class="btn btn-sm btn-light">Connexion</a>
-                <a href="{% url 'register' %}" class="btn btn-sm btn-outline-light ms-2">Inscription</a> {% endcomment %}
+                <a href="{% url 'auth:login' %}" class="btn btn-sm btn-light">Connexion</a>
+                <a href="{% url 'auth:register' %}" class="btn btn-sm btn-outline-light ms-2">Inscription</a> 
             </div>
         {% endif %}
     </div>
@@ -41,7 +42,7 @@
 </main>
 
 <footer>
-    <p>© {{ now|date:"Y" }} Task Tracker — Fait avev Django</p>
+    <p>© {{ now|date:"Y" }} Task Tracker — Fait avec Django</p>
 </footer>
 
 <!-- JS  -->
