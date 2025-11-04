@@ -40,6 +40,7 @@ class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Task
+    template_name = 'tasks/confirm_delete.html'
     success_url = reverse_lazy('tasks:list')
 
     def test_func(self):
