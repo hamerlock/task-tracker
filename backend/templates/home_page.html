@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}TaskFlow — Gérez vos tâches simplement{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Organisez vos journées, sans stress.</h1>
+    <p>Planifiez vos tâches sur un calendrier clair et minimaliste.  
+       Visualisez vos objectifs, restez concentré et accomplissez plus chaque jour.</p>
+    <a href="{% url 'auth:register' %}" class="btn btn-primary">Commencer gratuitement</a>
+</section>
+{% endblock %}

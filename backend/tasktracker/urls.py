@@ -17,13 +17,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
-
+from django.views.generic import TemplateView
 
 def home_redirect(request):
     return redirect('auth:login')
 
+def home(request):
+    return redirect('home_page.html')
+
+
 urlpatterns = [
-    path('', home_redirect, name='home_redirect'),
+    # path('', home_redirect, name='home_redirect'),
+    # Utilise TemplateView pour afficher directement la page d'accueil
+    # C'est la méthode la plus simple pour une page statique.
+    path('', TemplateView.as_view(template_name="home_page.html"), name='home'),
     path('tasks/', include("tasks.urls")),
     path('auth/', include("auth.urls")),
     path('admin/', admin.site.urls),
