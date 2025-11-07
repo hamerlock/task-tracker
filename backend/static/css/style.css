@@ -1,5 +1,6 @@
 html {
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
 }
@@ -64,3 +65,8 @@ footer {
     font-size: 0.9rem;
     color: #777;
 }
+
+/* Truncation utilities for task list */
+.min-w-0 { min-width: 0; }
+.truncate-1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
