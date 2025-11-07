@@ -31,19 +31,31 @@
       <div class="col-12">
         <label class="form-label" for="{{ form.description.id_for_label }}">Description <span class="text-danger">*</span></label>
         {{ form.description }}
+            {% if form.category.errors %}
+            <div class="invalid-feedback d-block">{{ form.category.errors|striptags }}</div>
+            {% endif %}
       </div>
       <div class="col-md-4">
         <label class="form-label" for="{{ form.category.id_for_label }}">Catégorie <span class="text-danger">*</span></label>
         {{ form.category }}
+            {% if form.category.errors %}
+            <div class="invalid-feedback d-block">{{ form.category.errors|striptags }}</div>
+            {% endif %}
       </div>
       <div class="col-md-4">
         <label class="form-label" for="{{ form.start_date.id_for_label }}">Début</label>
         {{ form.start_date }}
+            {% if form.start_date.errors %}
+            <div class="invalid-feedback d-block">{{ form.start_date.errors|striptags }}</div>
+            {% endif %}
       </div>
       <div class="col-md-4">
         <label class="form-label" for="{{ form.end_date.id_for_label }}">Fin</label>
         {{ form.end_date }}
-      </div>
+            {% if form.end_date.errors %}
+            <div class="invalid-feedback d-block">{{ form.end_date.errors|striptags }}</div>
+            {% endif %}
+        </div>
        <div class="col-12">
        {% comment %} <div class="form-check">
           {{ form.is_active }}

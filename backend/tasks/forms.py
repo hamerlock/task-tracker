@@ -1,4 +1,5 @@
-﻿from django import forms
+﻿from django.core.exceptions import ValidationError
+from django import forms
 from .models import Task
 
 class TaskForm(forms.ModelForm):
@@ -24,3 +25,10 @@ class TaskForm(forms.ModelForm):
         self.fields['end_date'].widget.attrs.update({'class': 'form-control'})
         #self.fields['is_active'].widget.attrs.update({'class': 'form-check-input'})
 
+    def clean(self):
+        cleaned_data = super().clean()
+        start = cleaned_data.get("start_date")
+        end = cleaned_data.get("end_date")
+        if start and end and start > end:
+            self.add_error("end_date", ValidationError("La date de fin doit être postérieure ou égale à la date de début."))
+        return cleaned_data
