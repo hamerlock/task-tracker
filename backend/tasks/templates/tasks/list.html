@@ -1,30 +1,103 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Mes Tâches{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Mes Tâches</h1>
+    <div>
+        <h1 class="mb-1">Mes Tâches</h1>
+        <div class="d-flex gap-3">
+            <div class="bg-white border rounded px-3 py-2 shadow-sm text-center">
+                <div class="fs-4 fw-bold text-dark">{{ stats.total }}</div>
+                <div class="text-muted small">Total</div>
+            </div>
+            <div class="bg-white border rounded px-3 py-2 shadow-sm text-center">
+                <div class="fs-4 fw-bold text-success">{{ stats.completed }}</div>
+                <div class="text-muted small">Terminées</div>
+            </div>
+            <div class="bg-white border rounded px-3 py-2 shadow-sm text-center">
+                <div class="fs-4 fw-bold text-primary">{{ stats.active }}</div>
+                <div class="text-muted small">Actives</div>
+            </div>
+        </div>
+    </div>
     <a href="{% url 'tasks:create' %}" class="btn btn-primary">Ajouter une tâche</a>
+</div>
+
+<div class="bg-white border rounded shadow-sm p-2 mb-3">
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link {% if current_filter == 'all' %}active{% endif %}" href="?filter=all">Toutes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_filter == 'active' %}active{% endif %}" href="?filter=active">Actives</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_filter == 'completed' %}active{% endif %}" href="?filter=completed">Terminées</a>
+        </li>
+    </ul>
 </div>
 
 {% if tasks %}
     <div class="list-group">
         {% for task in tasks %}
-            <a href="{% url 'tasks:detail' task.pk %}" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ task.description }}</h5>
-                    <small>{{ task.created_at|date:"d/m/Y" }}</small>
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1 {% if not task.is_active %}text-muted text-decoration-line-through{% endif %}">
+                            {{ task.description }}
+                        </h5>
+
+                        <div class="d-flex flex-wrap align-items-center gap-2 mt-1">
+                            {% with cat=task.category %}
+                                {% if cat == 'WORK' %}
+                                    <span class="badge text-bg-primary">Travail</span>
+                                {% elif cat == 'PERSO' %}
+                                    <span class="badge text-bg-info">Personnel</span>
+                                {% elif cat == 'HOME' %}
+                                    <span class="badge text-bg-success">Maison</span>
+                                {% else %}
+                                    <span class="badge text-bg-secondary">Autre</span>
+                                {% endif %}
+                            {% endwith %}
+
+                            {% if task.is_active %}
+                                <span class="badge text-bg-success">Actif</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">Archivé</span>
+                            {% endif %}
+
+                            <small class="text-muted ms-2">Créée le {{ task.created_at|date:"d/m/Y" }}</small>
+
+                            {% if task.start_date %}
+                                <small class="text-muted">• Début {{ task.start_date|date:"d/m/Y H:i" }}</small>
+                            {% endif %}
+                            {% if task.end_date %}
+                                <small class="text-muted">• Fin {{ task.end_date|date:"d/m/Y H:i" }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="ms-3 d-flex gap-2">
+    {% if task.is_active %}
+    <form method="post" action="{% url 'tasks:finish' task.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-outline-success">Terminer</button>
+    </form>
+    {% endif %}
+    <a href="{% url 'tasks:detail' task.pk %}" class="btn btn-sm btn-outline-secondary">Détails</a>
+    <a href="{% url 'tasks:update' task.pk %}" class="btn btn-sm btn-outline-warning">Modifier</a>
+    <a href="{% url 'tasks:delete' task.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+</div>
                 </div>
-                <p class="mb-1">Catégorie : {{ task.get_category_display }}</p>
-                <small>Status : {% if task.is_active %}Actif{% else %}Archivé{% endif %}</small>
-            </a>
+            </div>
         {% endfor %}
     </div>
 {% else %}
     <div class="text-center p-5 border rounded bg-white">
-        <p class="lead">Vous n'avez aucune tâche pour le moment.</p>
-        <p>Cliquez sur "Ajouter une tâche" pour commencer !</p>
+        <p class="lead mb-1">Aucune tâche trouvée</p>
+        <p class="text-muted">Commence par en ajouter une ci-dessus.</p>
     </div>
 {% endif %}
 {% endblock %}
+
