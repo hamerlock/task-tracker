@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import os;
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +21,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-texj74qt1scv@(7=f%b@8(pddw6cu2-icrslw+7n36ptf_ff0y'
+# Load from environment; fail in prod if missing; use unsafe dev fallback otherwise
+from django.core.exceptions import ImproperlyConfigured
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY and os.getenv("APP_ENV", "prod") != "dev":
+    raise ImproperlyConfigured("SECRET_KEY manquante en production")
+SECRET_KEY = SECRET_KEY or "dev-unsafe-secret-key-change-me"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("APP_ENV", "prod") == "dev"
+APP_ENV = os.getenv("APP_ENV", "prod")
+DEBUG = APP_ENV == "dev"
 
-# Pour le développement local, on autorise toutes les origines (Ã  ne pas faire en production)
-ALLOWED_HOSTS = ['*']
+# Pour le développement local, on autorise toutes les origines ( ne pas faire en production)
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS","tomremili.fr,www.tomremili.fr,tasktracker.tomremili.fr").split(",")
+    CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS","https://tomremili.fr,https://www.tomremili.fr,https://tasktracker.tomremili.fr").split(",")
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT","true").lower() in ("1","true","yes","on")
+    if os.getenv("USE_X_FORWARDED_PROTO","1").lower() in ("1","true","yes","on"):
+        SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 
 # Application definition
