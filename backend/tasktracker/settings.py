@@ -36,8 +36,16 @@ DEBUG = APP_ENV == "dev"
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS","tomremili.fr,www.tomremili.fr,tasktracker.tomremili.fr").split(",")
-    CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS","https://tomremili.fr,https://www.tomremili.fr,https://tasktracker.tomremili.fr").split(",")
+    # En production, pas de valeurs par défaut pour éviter d'exposer des domaines dans le repo public
+    ALLOWED_HOSTS_ENV = os.getenv("ALLOWED_HOSTS")
+    CSRF_TRUSTED_ORIGINS_ENV = os.getenv("CSRF_TRUSTED_ORIGINS")
+    if not ALLOWED_HOSTS_ENV:
+        raise ImproperlyConfigured("ALLOWED_HOSTS doit être défini en production")
+    if not CSRF_TRUSTED_ORIGINS_ENV:
+        raise ImproperlyConfigured("CSRF_TRUSTED_ORIGINS doit être défini en production (inclure le schéma, ex: https://example.com)")
+    ALLOWED_HOSTS = ALLOWED_HOSTS_ENV.split(",")
+    CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS_ENV.split(",")
+
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT","true").lower() in ("1","true","yes","on")
