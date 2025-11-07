@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+﻿from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -13,7 +13,7 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Compte créé avec succès ! Vous pouvez maintenant vous connecter.")
+            messages.success(request, 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.')
             return redirect("auth:login")
     else:
         form = RegisterForm()
@@ -31,7 +31,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            messages.success(request, f"Bienvenue {user.username} 👋")
+            messages.success(request, f'Bienvenue {user.username} !')
             return redirect("tasks:list")
     else:
         form = LoginForm()
@@ -39,9 +39,9 @@ def login_view(request):
     return render(request, "auth/login.html", {"form": form})
 
 
-# 🔹 Déconnexion
+# Déconnexion
 @login_required
 def logout_view(request):
     logout(request)
-    messages.info(request, "Vous avez été déconnecté.")
+    messages.info(request, 'Vous avez été déconnecté.')
     return redirect("auth:login")
